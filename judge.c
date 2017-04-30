@@ -16,6 +16,7 @@ inline void judge_get (line_t output)
 {
   int i;
   unsigned long input[WIDTH];
+  static line_t last_result = {};
   digitalWrite (PIN_TRIG, HIGH);
   delay (1);
   digitalWrite (PIN_TRIG, LOW);
@@ -25,7 +26,7 @@ inline void judge_get (line_t output)
     }
   for (i = 0; i < WIDTH; i++)
     {
-      if (input[i] / 5800.0 < 0.30)
+      if (input[i] / 5800.0 < 0.30 && !last_result[i])
         output[i] = 1;
       else
         output[i] = 0;
@@ -52,16 +53,4 @@ inline short int judge (void)
     return 1;
   else
     return 0;
-}
-
-inline short int judge_end (void)
-{
-  int i;
-  for (i = 0; i < WIDTH; i++)
-    {
-      if (result[i] != standard[i])
-        return 0;
-    }
-
-  return 1;
 }

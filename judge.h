@@ -14,8 +14,6 @@ inline void judge_get (line_t output);
 
 inline short int judge (void);
 
-inline short int judge_end (void);
-
 #ifdef __cplusplus
 }
 #endif

@@ -1,54 +1,133 @@
 #include "main.h"
 
 
-long int game1 (void)
+long int music_first (const music_t * music)
 {
   int i;
   long int score;
-  timer_t *game1_timer;
+  timer_t *music_timer;
   score = 0;
 
-  game1_timer = timer_init ();
+  music_timer = timer_init ();
 
   randomSeed (micros ());
-  for (i = 0; i < 35; i++)
+  display_image (zero_img);
+  for (i = -HEIGHT; i < music->length; i++)
     {
       short int no_judging;
       line_t line = {};
-      unsigned long int real_duration;
-      line[random (0, WIDTH)] = 1;
-      judge_set (line);
-      real_duration = test[i].duration * 1000;
-      timer_set (game1_timer, real_duration);
+      line_t judge_line;
+      if (i < 0)
+        /* preparation */
+        {
+          display_line (line);
+          timer_set (music_timer, (unsigned long int) (music->tempo * 1000 / 60));
+          no_judging = 1;
+        }
+      else
+        {
+          line[random (0, WIDTH)] = 1;
+          display_line (line);
+          get_last_line (judge_line);
+          judge_set (judge_line);
+          timer_set (music_timer, (unsigned long int) (music->notes[i].duration * music->tempo * 1000 / 60));
+          no_judging = 0;
+        }
 
-      no_judging = 0;
+
       while (1)
         {
           short int judgement;
 
-          if (no_judging)
-            continue;
-          
+          if (!no_judging)
+            {
+              judgement = judge ();
+              if (judgement == -1)
+                {
+                  play_note (noise_note ());
+                  score -= 100;
+                  no_judging = 1;
+                }
+              else if (judgement == 1)
+                {
+                  play_note (&music->notes[i]);
+                  score += 20;
+                  no_judging = 1;
+                }
+            }
+
+
+          if (timer_check (music_timer))
+            {
+              if (!no_judging)
+                {
+                  play_note (&rest_note);
+                  score -= 100;
+                }
+              break;
+            }
+        }
+    }
+
+  timer_destory (music_timer);
+  return score;
+}
+
+
+long int step_first (const music_t * music, unsigned long int time_limit)
+{
+  int i;
+  long int score;
+  timer_t *limit_timer;
+  short int end;
+  end = 0;
+  score = 0;
+
+  limit_timer = timer_init ();
+  timer_set (limit_timer, time_limit);
+
+  randomSeed (micros ());
+  for (i = 0; i < music->length && !end; i++)
+    {
+      short int no_judging;
+      line_t line = {};
+      line_t judge_line;
+
+      line[random (0, WIDTH)] = 1;
+      display_line (line);
+      if (i < HEIGHT)
+        /* preparation */
+        continue;
+
+      get_last_line (judge_line);
+      judge_set (judge_line);
+
+ 
+      while (!end)
+        {
+          short int judgement;
+
           judgement = judge ();
           if (judgement == -1)
             {
+              play_note (noise_note ());
               score -= 100;
-              no_judging = 1;
             }
           else if (judgement == 1)
             {
-              play_note (&test[i]);
+              play_note (&music->notes[i]);
               score += 20;
             }
 
 
-          if (timer_check (game1_timer))
+          if (timer_check (limit_timer))
             {
               break;
             }
         }
     }
-  
+
+  timer_destory (limit_timer);
   return score;
 }
 
@@ -73,26 +152,36 @@ void setup (void)
 void loop (void)
 {
   short int mode;
+  short int found_mode;
   timer_t *select_mode_timer;
   short int current_image;
   select_mode_timer = timer_init ();
-  timer_set (select_mode_timer, NORMAL_FLASH);
+  timer_set (select_mode_timer, NORMAL_FLASH_PERIOD);
   display_image (zero_img);
   current_image = 0;
+  found_mode = 0;
   while (1)
     {
       int i;
       line_t input;
       judge_get (input);
-      for (i = 0; i < WIDTH; i++)
+      if (!found_mode)
         {
-          if (input[i])
-            break;
+          for (i = 0; i < WIDTH; i++)
+            {
+              if (input[i])
+                break;
+            }
+          if (i < WIDTH)
+            {
+              mode = i;
+              found_mode = 1;
+            }
         }
-      if (i < WIDTH)
+      else
         {
-          mode = i;
-          break;
+          if (!input[i])
+            break;
         }
 
       if (timer_check (select_mode_timer))
@@ -107,10 +196,23 @@ void loop (void)
               display_image (e_img);
               current_image = 1;
             }
-          timer_set (select_mode_timer, NORMAL_FLASH);
+          timer_set (select_mode_timer, NORMAL_FLASH_PERIOD);
         }
     }
   timer_destory (select_mode_timer);
 
-  game1 ();
+  switch (mode)
+    {
+    case 0:
+      music_first (&music_list[MUSIC_TEST]);
+      break;
+    case 1:
+      step_first (&music_list[MUSIC_TEST], TIME_LIMIT);
+      break;
+    default:
+      break;
+    }
+
+  display_image (e_img);
+  delay (2000);
 }
