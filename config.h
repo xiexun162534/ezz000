@@ -7,9 +7,9 @@
 #define WIDTH 4
 
 #include <Arduino.h>
-#define PIN_CLK A1
-#define PIN_TRIG A2
-#define PIN_BUZZER A3
+#define PIN_CLK A2
+#define PIN_TRIG A3
+#define PIN_BUZZER 11
 extern const short int PIN_ECHO[WIDTH];
 extern const short int PIN_RED[WIDTH];
 extern const short int PIN_BLUE[WIDTH];

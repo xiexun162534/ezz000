@@ -20,13 +20,22 @@ long int music_first (const music_t * music)
       if (i < 0)
         /* preparation */
         {
+          line[random (0, WIDTH)] = 1;
           display_line (line);
           timer_set (music_timer, (unsigned long int) (music->tempo * 1000 / 60));
           no_judging = 1;
         }
-      else
+      else if (i < music->length - HEIGHT)
         {
           line[random (0, WIDTH)] = 1;
+          display_line (line);
+          get_last_line (judge_line);
+          judge_set (judge_line);
+          timer_set (music_timer, (unsigned long int) (music->notes[i].duration * music->tempo * 1000 / 60));
+          no_judging = 0;
+        }
+      else
+        {
           display_line (line);
           get_last_line (judge_line);
           judge_set (judge_line);
@@ -84,6 +93,9 @@ long int music_first (const music_t * music)
               if (!no_judging)
                 {
                   play_note (&rest_note);
+                  #ifdef __DEBUG
+                  play_note (&music->notes[i]);
+                  #endif
                   score -= 100;
                 }
               break;
@@ -174,6 +186,7 @@ void setup (void)
 
 void loop (void)
 {
+  long int score;
   short int mode;
   short int found_mode;
   timer_t *select_mode_timer;
@@ -231,15 +244,17 @@ void loop (void)
   switch (mode)
     {
     case 0:
-      music_first (&music_list[MUSIC_TEST]);
+      score = music_first (&music_list[MUSIC_TEST]);
       break;
     case 1:
-      step_first (&music_list[MUSIC_TEST], TIME_LIMIT);
+      score = step_first (&music_list[MUSIC_TEST], TIME_LIMIT);
       break;
     default:
       break;
     }
 
+  Serial.println ("score");
+  Serial.println (score);
   display_image (e_img);
   delay (2000);
 }
