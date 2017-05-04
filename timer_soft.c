@@ -1,6 +1,6 @@
 #include "timer_soft.h"
 
-static timer_t timer_list[TIMER_MAX];
+static timer_t timer_list[TIMER_MAX] = {{1}, {1}};
 
 inline timer_t *timer_init ()
 {

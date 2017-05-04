@@ -33,12 +33,34 @@ long int music_first (const music_t * music)
           timer_set (music_timer, (unsigned long int) (music->notes[i].duration * music->tempo * 1000 / 60));
           no_judging = 0;
         }
+      #ifdef __DEBUG
+      Serial.println ("random");
+      do
+        {
+          int k;
+          for (k = 0; k < WIDTH; k++)
+            {
+              Serial.print (line[k]);
+              Serial.print (' ');
+              Serial.print (k);
+              Serial.print (' ');
+            }
+        } while (0);
+      Serial.println ("");
+      Serial.print ("length");
+      Serial.print (music->length);
+      Serial.println ("");
+      Serial.print ("no");
+      Serial.print (i);
+      Serial.println ("");
+      Serial.println ("");
+      #endif
 
 
       while (1)
         {
           short int judgement;
-
+          
           if (!no_judging)
             {
               judgement = judge ();
@@ -145,6 +167,7 @@ void setup (void)
       pinMode (PIN_RED[i], OUTPUT);
       pinMode (PIN_ECHO[i], INPUT);
     }
+  Serial.println ("welcome");
   display_image (e_img);
   delay (2000);
 }
@@ -162,6 +185,10 @@ void loop (void)
   found_mode = 0;
   while (1)
     {
+      #ifdef __DEBUG
+      mode = 0;
+      break;
+      #endif
       int i;
       line_t input;
       judge_get (input);

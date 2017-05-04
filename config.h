@@ -1,6 +1,7 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+#define __DEBUG
 
 #define HEIGHT 5
 #define WIDTH 4
@@ -13,7 +14,7 @@ extern const short int PIN_ECHO[WIDTH];
 extern const short int PIN_RED[WIDTH];
 extern const short int PIN_BLUE[WIDTH];
 
-#define TIMER_MAX 10
+#define TIMER_MAX 2
 
 #define STANDARD_DISTANCE 0.30
 #define ECHO_TIMEOUT 10000 /* microseconds */
