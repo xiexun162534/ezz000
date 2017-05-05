@@ -15,6 +15,21 @@ const music_t music_list[TOTAL_MUSIC] =
        {s1, C, 1.0},{s1, D, 1.0},{s1, E, 1.0},{s1, F, 1.0},{s1, G, 1.0},
        {s1, C, 1.0},{s1, D, 1.0},{s1, E, 1.0},{s1, F, 1.0},{s1, G, 1.0}
      }
+    },
+    /* Music 1 */
+    {67, 144.0,
+     {
+       {s1,E,1.0},{s1,E,1.0},{s1,F,1.0},{s1,G,1.0},{s1,G,1.0},{s1,F,1.0},{s1,E,1.0},
+       {s1,D,1.0},{s1,C,1.0},{s1,C,1.0},{s1,D,1.0},{s1,E,1.0},{s1,E,1.0},{s1,D,1.0},
+       {s1,D,1.0},{s1,REST,1.0},{s1,E,1.0},{s1,E,1.0},{s1,F,1.0},{s1,G,1.0},{s1,G,1.0},
+       {s1,F,1.0},{s1,E,1.0},{s1,D,1.0},{s1,C,1.0},{s1,C,1.0},{s1,D,1.0},{s1,E,1.0},
+       {s1,D,1.0},{s1,C,1.0},{s1,C,1.0},{s1,REST,1.0},{s1,D,1.0},{s1,D,1.0},{s1,E,1.0},
+       {s1,C,1.0},{s1,D,1.0},{s1,E,0.5},{s1,F,0.5},{s1,E,1.0},{s1,C,1.0},{s1,D,1.0},
+       {s1,E,0.5},{s1,F,0.5},{s1,E,1.0},{s1,D,1.0},{s1,C,1.0},{s1,D,1.0},{s0,G,1.0},
+       {s1,E,1.0},{s1,E,1.0},{s1,E,1.0},{s1,F,1.0},{s1,G,1.0},{s1,G,1.0},{s1,F,1.0},
+       {s1,E,1.0},{s1,F,0.5},{s1,D,0.5},{s1,C,1.0},{s1,C,1.0},{s1,D,1.0},{s1,E,1.0},
+       {s1,D,1.0},{s1,C,1.0},{s1,C,1.0},{s1,REST,1.0}
+     }
     }
   };
 
@@ -24,8 +39,11 @@ inline void play_note (const note_t *note)
 {
   if (note->step == REST)
     noTone_c (PIN_BUZZER);
-  unsigned int frequency = (unsigned int) (a1 * pow (2, note->octave + note->step / 12.0f));
-  tone_c (PIN_BUZZER, frequency);
+  else
+    {
+      unsigned int frequency = (unsigned int) (a1 * pow (2, note->octave + note->step / 12.0f));
+      tone_c (PIN_BUZZER, frequency);
+    }
 }
 
 inline note_t *noise_note (void)

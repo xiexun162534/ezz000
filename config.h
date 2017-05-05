@@ -21,8 +21,8 @@ extern const short int PIN_BLUE[WIDTH];
 
 #define NORMAL_FLASH_PERIOD 500 /* milliseconds */
 
-#define MAX_MUSIC_LENGTH 100
-#define TOTAL_MUSIC 1
+#define MAX_MUSIC_LENGTH 70
+#define TOTAL_MUSIC 2
 
 #define TIME_LIMIT 20000 /* milliseconds */
 

@@ -23,6 +23,7 @@ typedef struct __music_t
 } music_t;
 
 #define MUSIC_TEST 0
+#define MUSIC_2 1
 
 extern const music_t music_list[TOTAL_MUSIC];
 

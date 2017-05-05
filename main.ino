@@ -31,7 +31,7 @@ long int music_first (const music_t * music)
           display_line (line);
           get_last_line (judge_line);
           judge_set (judge_line);
-          timer_set (music_timer, (unsigned long int) (music->notes[i].duration * music->tempo * 1000 / 60));
+          timer_set (music_timer, (unsigned long int) (music->notes[i].duration * 60 * 1000 / music->tempo));
           no_judging = 0;
         }
       else
@@ -39,7 +39,7 @@ long int music_first (const music_t * music)
           display_line (line);
           get_last_line (judge_line);
           judge_set (judge_line);
-          timer_set (music_timer, (unsigned long int) (music->notes[i].duration * music->tempo * 1000 / 60));
+          timer_set (music_timer, (unsigned long int) (music->notes[i].duration * 60 * 1000 / music->tempo));
           no_judging = 0;
         }
       #ifdef __DEBUG
@@ -244,7 +244,7 @@ void loop (void)
   switch (mode)
     {
     case 0:
-      score = music_first (&music_list[MUSIC_TEST]);
+      score = music_first (&music_list[MUSIC_2]);
       break;
     case 1:
       score = step_first (&music_list[MUSIC_TEST], TIME_LIMIT);
