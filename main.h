@@ -9,6 +9,11 @@
 #include "music.h"
 
 /* Default value of duration is 0. */
+extern "C" long int random_c (long int a, long int b)
+{
+  return random (a, b);
+}
+
 extern "C" void tone_c (unsigned char pin, unsigned int frequency)
 {
   tone (pin, frequency, 0);

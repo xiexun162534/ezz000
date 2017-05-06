@@ -22,7 +22,7 @@ long int music_first (const music_t * music)
         {
           line[random (0, WIDTH)] = 1;
           display_line (line);
-          timer_set (music_timer, (unsigned long int) (music->tempo * 1000 / 60));
+          timer_set (music_timer, (unsigned long int) (60 * 1000 / music->tempo));
           no_judging = 1;
         }
       else if (i < music->length - HEIGHT)
@@ -75,6 +75,9 @@ long int music_first (const music_t * music)
               judgement = judge ();
               if (judgement == -1)
                 {
+                  #ifdef __DEBUG
+                  Serial.println ("wrong!!");
+                  #endif
                   play_note (noise_note ());
                   score -= 100;
                   no_judging = 1;
@@ -96,7 +99,7 @@ long int music_first (const music_t * music)
                   #ifdef __DEBUG
                   play_note (&music->notes[i]);
                   #endif
-                  score -= 100;
+                  score -= 0;
                 }
               break;
             }
@@ -113,15 +116,13 @@ long int step_first (const music_t * music, unsigned long int time_limit)
   int i;
   long int score;
   timer_t *limit_timer;
-  short int end;
-  end = 0;
   score = 0;
 
   limit_timer = timer_init ();
   timer_set (limit_timer, time_limit);
 
   randomSeed (micros ());
-  for (i = 0; i < music->length && !end; i++)
+  for (i = 0; i < music->length; i++)
     {
       short int no_judging;
       line_t line = {};
@@ -137,7 +138,7 @@ long int step_first (const music_t * music, unsigned long int time_limit)
       judge_set (judge_line);
 
  
-      while (!end)
+      while (1)
         {
           short int judgement;
 
@@ -145,7 +146,7 @@ long int step_first (const music_t * music, unsigned long int time_limit)
           if (judgement == -1)
             {
               play_note (noise_note ());
-              score -= 100;
+              score -= 0;
             }
           else if (judgement == 1)
             {
@@ -255,6 +256,13 @@ void loop (void)
 
   Serial.println ("score");
   Serial.println (score);
+  if (digitalRead (PIN_B) == LOW)
+    display_image (B_img);
+  else if (random (0, 5))
+    display_image (A_img);
+  else
+    display_image (S_img);
+  delay (10000);
   display_image (e_img);
   delay (2000);
 }

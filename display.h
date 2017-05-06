@@ -9,6 +9,12 @@ typedef short int image_t[HEIGHT][WIDTH];
              
 extern const image_t e_img;
 
+extern const image_t S_img;
+
+extern const image_t A_img;
+
+extern const image_t B_img;
+
 extern const image_t zero_img;
 
 #ifdef __cplusplus

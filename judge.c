@@ -9,6 +9,7 @@ inline void judge_set (line_t draft_standard)
   for (i = 0; i < WIDTH; i++)
     {
       standard[i] = draft_standard[i];
+      result[i] = 0;
     }
 }
 
@@ -18,7 +19,7 @@ inline void judge_get (line_t output)
   unsigned long input[WIDTH];
   static line_t last_result = {};
   digitalWrite (PIN_TRIG, HIGH);
-  delay (1);
+  delay (10);
   digitalWrite (PIN_TRIG, LOW);
   for (i = 0; i < WIDTH; i++)
     {
@@ -26,10 +27,16 @@ inline void judge_get (line_t output)
     }
   for (i = 0; i < WIDTH; i++)
     {
-      if (input[i] / 5800.0 < 0.30 && !last_result[i])
-        output[i] = 1;
+      if ((input[i] / 5800.0 < STANDARD_DISTANCE) && !last_result[i])
+        {
+          output[i] = 1;
+          last_result[i] = 1;
+        }
       else
-        output[i] = 0;
+        {
+          output[i] = 0;
+          last_result[i] = 0;
+        }
     }
 }
 

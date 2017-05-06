@@ -9,6 +9,7 @@
 #include <Arduino.h>
 #define PIN_CLK A2
 #define PIN_TRIG A3
+#define PIN_B A4
 #define PIN_BUZZER 11
 extern const short int PIN_ECHO[WIDTH];
 extern const short int PIN_RED[WIDTH];
@@ -21,8 +22,8 @@ extern const short int PIN_BLUE[WIDTH];
 
 #define NORMAL_FLASH_PERIOD 500 /* milliseconds */
 
-#define MAX_MUSIC_LENGTH 70
-#define TOTAL_MUSIC 2
+#define MAX_MUSIC_LENGTH 120
+#define TOTAL_MUSIC 1
 
 #define TIME_LIMIT 20000 /* milliseconds */
 
@@ -31,6 +32,8 @@ extern const short int PIN_BLUE[WIDTH];
 void tone_c (unsigned char pin, unsigned int frequency);
 
 void noTone_c (unsigned char pin);
+
+long int random_c (long int a, long int b);
 #endif
 
 #endif
